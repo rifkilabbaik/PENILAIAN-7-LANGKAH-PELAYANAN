@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#f97316">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<meta name="apple-mobile-web-app-title" content="Penilaian 7LP">
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Penilaian 7 Langkah Pelayanan</title>
@@ -323,6 +334,67 @@
   }
 </style>
 </head>
+
+<script>
+if ('serviceWorker' in navigator) {
+
+    window.addEventListener('load', () => {
+
+        navigator.serviceWorker.register('./service-worker.js');
+
+    });
+
+}
+</script>
+
+<script>
+
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+
+    e.preventDefault();
+
+    deferredPrompt = e;
+
+    const btn = document.createElement("button");
+
+    btn.id = "installApp";
+
+    btn.innerHTML = "📲 Install Aplikasi";
+
+    btn.style.position = "fixed";
+    btn.style.bottom = "20px";
+    btn.style.left = "50%";
+    btn.style.transform = "translateX(-50%)";
+    btn.style.background = "#f97316";
+    btn.style.color = "#fff";
+    btn.style.border = "none";
+    btn.style.padding = "14px 28px";
+    btn.style.borderRadius = "50px";
+    btn.style.fontSize = "16px";
+    btn.style.fontWeight = "bold";
+    btn.style.boxShadow = "0 8px 20px rgba(0,0,0,.25)";
+    btn.style.zIndex = "99999";
+
+    document.body.appendChild(btn);
+
+    btn.onclick = async () => {
+
+        btn.remove();
+
+        deferredPrompt.prompt();
+
+        await deferredPrompt.userChoice;
+
+        deferredPrompt = null;
+
+    };
+
+});
+
+</script>
+  
 <body>
 
 <!-- HEADER -->
