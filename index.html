@@ -334,19 +334,6 @@
   }
 </style>
 </head>
-
-<script>
-if ('serviceWorker' in navigator) {
-
-    window.addEventListener('load', () => {
-
-        navigator.serviceWorker.register('./service-worker.js');
-
-    });
-
-}
-</script>
-
 <script>
 
 let deferredPrompt;
@@ -394,7 +381,18 @@ window.addEventListener('beforeinstallprompt', (e) => {
 });
 
 </script>
-  
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', async () => {
+        try{
+            const reg = await navigator.serviceWorker.register('./service-worker.js');
+            console.log("SW OK", reg);
+        }catch(e){
+            console.error(e);
+        }
+    });
+}
+</script> 
 <body>
 
 <!-- HEADER -->
