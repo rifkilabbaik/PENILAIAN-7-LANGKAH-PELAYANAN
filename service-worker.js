@@ -1,11 +1,12 @@
-const CACHE_NAME = "penilaian-7lp-v1";
+const CACHE_NAME = "penilaian-7lp-v2";
 
 const FILES_TO_CACHE = [
     "./",
     "./index.html",
-    "./manifest.json"
+    "./manifest.json",
+    "./icons/icon-192.png",
+    "./icons/icon-512.png"
 ];
-
 self.addEventListener("install", event => {
 
     event.waitUntil(
