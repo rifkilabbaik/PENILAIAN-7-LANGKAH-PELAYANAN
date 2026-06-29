@@ -1,1067 +1,801 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Penilaian 7 Langkah Pelayanan</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg: #0f0f13;
-    --surface: #1a1a22;
-    --surface2: #22222e;
-    --border: #2e2e3e;
-    --accent: #f97316;
-    --accent2: #fb923c;
-    --accent-soft: rgba(249,115,22,0.12);
-    --gold: #fbbf24;
-    --gold-dim: #78580a;
-    --text: #f0f0f5;
-    --text-sub: #8888a0;
-    --text-muted: #55556a;
-    --green: #22c55e;
-    --radius: 14px;
-    --radius-sm: 8px;
+    --primary: #f97316;
+    --primary-light: #fff7ed;
+    --primary-mid: #fed7aa;
+    --accent: #ea580c;
+    --bg: #fafaf9;
+    --card: #ffffff;
+    --border: #e7e5e4;
+    --text: #1c1917;
+    --text-muted: #78716c;
+    --text-light: #a8a29e;
+    --success: #16a34a;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.05);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
   }
-
+  * { margin:0; padding:0; box-sizing:border-box; }
   body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family:'Plus Jakarta Sans', sans-serif;
     background: var(--bg);
     color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    background-image:
-      radial-gradient(ellipse 60% 40% at 50% 0%, rgba(249,115,22,0.08) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 30% at 80% 100%, rgba(251,146,60,0.05) 0%, transparent 50%);
+    min-height:100vh;
   }
-
-  .app {
-    width: 100%;
-    max-width: 520px;
-    position: relative;
-  }
+  .screen { display:none; animation: fadeIn .35s ease; }
+  .screen.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
 
   /* HEADER */
   .app-header {
-    text-align: center;
-    margin-bottom: 24px;
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 60%, #c2410c 100%);
+    padding: 20px 16px 18px;
+    text-align:center;
+    position:sticky; top:0; z-index:100;
+    box-shadow: 0 2px 12px rgba(249,115,22,0.3);
   }
-
-  .app-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--accent-soft);
-    border: 1px solid rgba(249,115,22,0.3);
-    border-radius: 100px;
-    padding: 4px 12px;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--accent2);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
+  .app-header h1 {
+    font-family:'DM Serif Display', serif;
+    font-size:1.15rem;
+    color:#fff;
+    letter-spacing:.5px;
+    line-height:1.3;
   }
-
-  .dot-pulse {
-    width: 6px; height: 6px;
-    background: var(--accent);
-    border-radius: 50%;
-    animation: pulse 2s infinite;
+  .app-header .subtitle {
+    font-size:.7rem;
+    color:rgba(255,255,255,0.8);
+    margin-top:2px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    font-weight:600;
   }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.7); }
+  .step-indicator {
+    display:flex; justify-content:center; gap:6px; margin-top:12px;
   }
-
-  .app-title {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--text);
-    line-height: 1.2;
-    letter-spacing: -0.02em;
+  .step-dot {
+    width:28px; height:4px; border-radius:2px;
+    background:rgba(255,255,255,0.35); transition:.3s;
   }
+  .step-dot.active { background:#fff; }
 
-  .app-title span { color: var(--accent); }
-
-  /* SCREENS */
-  .screen { display: none; animation: fadeSlide 0.35s ease; }
-  .screen.active { display: block; }
-
-  @keyframes fadeSlide {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  /* CONTAINER */
+  .container { max-width:480px; margin:0 auto; padding:16px; }
 
   /* CARD */
   .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    margin-bottom: 16px;
+    background: var(--card);
+    border-radius:16px;
+    padding:20px;
+    box-shadow: var(--shadow);
+    border:1px solid var(--border);
+    margin-bottom:14px;
   }
-
   .card-title {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 18px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size:.7rem;
+    font-weight:700;
+    letter-spacing:1.8px;
+    text-transform:uppercase;
+    color: var(--primary);
+    margin-bottom:14px;
+    padding-bottom:10px;
+    border-bottom:2px solid var(--primary-mid);
+    display:flex; align-items:center; gap:8px;
   }
-
-  .card-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
+  .card-title::before {
+    content:'';
+    width:3px; height:14px;
+    background: var(--primary);
+    border-radius:2px;
+    display:inline-block;
   }
 
   /* FORM */
-  .form-group { margin-bottom: 16px; }
-
-  label {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-sub);
-    margin-bottom: 6px;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
+  .form-group { margin-bottom:14px; }
+  .form-label {
+    display:block;
+    font-size:.75rem;
+    font-weight:600;
+    color: var(--text-muted);
+    margin-bottom:6px;
+    letter-spacing:.5px;
+    text-transform:uppercase;
   }
-
-  select, input[type="text"], input[type="time"] {
-    width: 100%;
-    background: var(--surface2);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
+  .form-control {
+    width:100%;
+    padding:11px 14px;
+    border:1.5px solid var(--border);
+    border-radius:10px;
+    font-family:inherit;
+    font-size:.9rem;
+    font-weight:500;
     color: var(--text);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 11px 14px;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    -webkit-appearance: none;
+    background: #fafaf9;
+    outline:none;
+    transition:.2s;
+    appearance:none;
   }
-
-  select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238888a0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 36px;
-    cursor: pointer;
+  .form-control:focus {
+    border-color: var(--primary);
+    background:#fff;
+    box-shadow:0 0 0 3px rgba(249,115,22,0.12);
   }
-
-  select option { background: #1a1a22; color: var(--text); }
-
-  select:focus, input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(249,115,22,0.15);
+  .select-wrap { position:relative; }
+  .select-wrap::after {
+    content:'';
+    position:absolute; right:13px; top:50%;
+    transform:translateY(-50%);
+    width:0; height:0;
+    border-left:5px solid transparent;
+    border-right:5px solid transparent;
+    border-top:6px solid var(--text-muted);
+    pointer-events:none;
   }
-
-  input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(0.5); cursor: pointer; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 
   /* BUTTONS */
-  .btn-row {
-    display: flex;
-    gap: 10px;
-    margin-top: 8px;
-  }
-
+  .btn-row { display:flex; gap:10px; margin-top:6px; }
   .btn {
-    flex: 1;
-    padding: 13px 20px;
-    border-radius: var(--radius-sm);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s;
-    letter-spacing: 0.02em;
+    flex:1; padding:13px;
+    border:none; border-radius:12px;
+    font-family:inherit; font-size:.9rem; font-weight:700;
+    cursor:pointer; transition:.2s; letter-spacing:.3px;
   }
-
-  .btn-ghost {
-    background: var(--surface2);
-    color: var(--text-sub);
-    border: 1.5px solid var(--border);
+  .btn-reset {
+    background:#f5f5f4; color: var(--text-muted);
+    border:1.5px solid var(--border);
   }
-
-  .btn-ghost:hover { border-color: var(--text-muted); color: var(--text); }
-
+  .btn-reset:hover { background:#e7e5e4; }
   .btn-primary {
-    background: var(--accent);
-    color: #fff;
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    color:#fff;
+    box-shadow:0 4px 14px rgba(249,115,22,0.35);
+  }
+  .btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(249,115,22,0.45); }
+  .btn-secondary {
+    background:#fff; color: var(--text);
+    border:1.5px solid var(--border);
+  }
+  .btn-secondary:hover { background:#f5f5f4; }
+  .btn-success {
+    background:linear-gradient(135deg,#16a34a,#15803d);
+    color:#fff;
+    box-shadow:0 4px 14px rgba(22,163,74,0.3);
+  }
+  .btn-tg {
+    background:linear-gradient(135deg,#229ED9,#1a7fb8);
+    color:#fff;
+    box-shadow:0 4px 14px rgba(34,158,217,0.3);
   }
 
-  .btn-primary:hover { background: #ea6a08; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(249,115,22,0.35); }
-  .btn-primary:active { transform: translateY(0); }
-
-  .btn-green {
-    background: var(--green);
-    color: #fff;
-  }
-
-  .btn-green:hover { background: #16a34a; transform: translateY(-1px); }
-
-  /* SCREEN 2 - PENILAIAN */
-  .step-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .step-num {
-    width: 32px; height: 32px;
-    background: var(--accent);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: 800;
-    color: #fff;
-    flex-shrink: 0;
-  }
-
-  .step-label {
-    font-size: 15px;
-    font-weight: 800;
-    color: var(--text);
-    letter-spacing: -0.01em;
-  }
-
-  .step-sub {
-    font-size: 11px;
-    color: var(--text-sub);
-    margin-top: 1px;
+  /* SECTION LABEL (screen 2) */
+  .section-label {
+    font-size:.65rem;
+    font-weight:800;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:#fff;
+    background: linear-gradient(135deg,#f97316,#ea580c);
+    padding:6px 12px;
+    border-radius:8px;
+    display:inline-block;
+    margin-bottom:12px;
   }
 
   /* STAR RATING */
-  .rating-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 11px 0;
-    border-bottom: 1px solid var(--border);
-    gap: 10px;
+  .criterion-row {
+    padding:12px 0;
+    border-bottom:1px solid #f5f5f4;
   }
-
-  .rating-item:last-child { border-bottom: none; }
-
-  .rating-label {
-    font-size: 13px;
-    font-weight: 500;
+  .criterion-row:last-child { border-bottom:none; padding-bottom:0; }
+  .criterion-name {
+    font-size:.83rem;
+    font-weight:600;
     color: var(--text);
-    flex: 1;
-    line-height: 1.4;
+    margin-bottom:8px;
+    line-height:1.4;
   }
-
-  .rating-bobot {
-    font-size: 10px;
-    color: var(--text-muted);
-    font-family: 'DM Mono', monospace;
-    flex-shrink: 0;
-    margin-right: 4px;
+  .criterion-bottom {
+    display:flex; align-items:center; justify-content:space-between;
   }
-
-  .stars {
-    display: flex;
-    gap: 3px;
-    flex-shrink: 0;
-  }
-
+  .stars { display:flex; gap:4px; }
   .star {
-    font-size: 22px;
-    cursor: pointer;
-    transition: transform 0.15s, color 0.15s;
-    user-select: none;
-    color: var(--border);
-    line-height: 1;
+    font-size:1.5rem;
+    cursor:pointer;
+    transition:transform .15s, color .15s;
+    color:#d6d3d1;
+    user-select:none;
+    line-height:1;
   }
-
-  .star.active { color: var(--gold); }
-  .star:hover { transform: scale(1.2); }
-
-  /* SCREEN 3 - HASIL */
-  .result-header {
-    text-align: center;
-    margin-bottom: 20px;
+  .star.active { color:#f97316; }
+  .star:hover { transform:scale(1.2); }
+  .star-label {
+    font-size:.72rem;
+    font-weight:700;
+    padding:3px 9px;
+    border-radius:20px;
+    background: var(--primary-light);
+    color: var(--primary);
+    min-width:72px;
+    text-align:center;
+    transition:.2s;
   }
+  .star-label.s0 { background:#f5f5f4; color:var(--text-light); }
+  .star-label.s1 { background:#fef2f2; color:#dc2626; }
+  .star-label.s2 { background:#fff7ed; color:#ea580c; }
+  .star-label.s3 { background:#fefce8; color:#ca8a04; }
+  .star-label.s4 { background:#f0fdf4; color:#16a34a; }
+  .star-label.s5 { background:#eff6ff; color:#2563eb; }
 
-  .score-circle {
-    width: 120px; height: 120px;
-    margin: 0 auto 16px;
-    position: relative;
+  /* SCORE SUMMARY */
+  .score-hero {
+    text-align:center;
+    padding:28px 20px;
+    background:linear-gradient(135deg,#fff7ed,#fff);
+    border-radius:16px;
+    border:2px solid var(--primary-mid);
+    margin-bottom:14px;
   }
-
-  .score-circle svg { transform: rotate(-90deg); }
-
-  .score-circle circle {
-    fill: none;
-    stroke-width: 8;
-    stroke-linecap: round;
+  .score-big {
+    font-family:'DM Serif Display', serif;
+    font-size:3.5rem;
+    color: var(--primary);
+    line-height:1;
   }
-
-  .score-circle .bg-circle { stroke: var(--surface2); }
-  .score-circle .fg-circle {
-    stroke: var(--accent);
-    transition: stroke-dashoffset 1s ease;
+  .score-pct {
+    font-size:1rem;
+    font-weight:700;
+    color: var(--accent);
+    margin-top:2px;
   }
-
-  .score-text {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
+  .score-grade {
+    display:inline-block;
+    margin-top:10px;
+    padding:6px 20px;
+    border-radius:20px;
+    font-weight:800;
+    font-size:.85rem;
+    letter-spacing:.5px;
   }
-
-  .score-val {
-    font-size: 26px;
-    font-weight: 800;
-    color: var(--text);
-    line-height: 1;
-    font-family: 'DM Mono', monospace;
-  }
-
-  .score-unit { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
-
-  .grade-badge {
-    display: inline-block;
-    padding: 4px 16px;
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    margin-bottom: 8px;
-  }
-
-  .result-info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-
-  .info-chip {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px 14px;
-  }
-
-  .info-chip-label {
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 3px;
-  }
-
-  .info-chip-val {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text);
-  }
+  .grade-sempurna { background:#eff6ff; color:#2563eb; }
+  .grade-baik { background:#f0fdf4; color:#16a34a; }
+  .grade-cukup { background:#fefce8; color:#ca8a04; }
+  .grade-kurang { background:#fff7ed; color:#ea580c; }
+  .grade-buruk { background:#fef2f2; color:#dc2626; }
 
   .result-category {
-    margin-bottom: 4px;
+    background: var(--card);
+    border-radius:12px;
+    padding:14px 16px;
+    margin-bottom:10px;
+    border:1.5px solid var(--border);
   }
-
   .result-cat-header {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-    padding: 8px 14px;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:8px;
   }
-
-  .result-cat-total {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
+  .result-cat-name {
+    font-size:.8rem; font-weight:800;
+    letter-spacing:1px; text-transform:uppercase;
+    color: var(--primary);
+  }
+  .result-cat-score {
+    font-size:.85rem; font-weight:700;
     color: var(--text);
+    background: var(--primary-light);
+    padding:3px 10px; border-radius:20px;
   }
-
-  .result-kpi-list {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-top: none;
-    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-    overflow: hidden;
+  .result-item {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:5px 0;
+    border-top:1px dashed #e7e5e4;
+    font-size:.78rem;
   }
+  .result-item-name { color: var(--text-muted); flex:1; }
+  .result-item-score { font-weight:700; color: var(--text); margin-left:8px; }
+  .result-item-pct { font-size:.72rem; color: var(--primary); margin-left:6px; font-weight:600; }
 
-  .result-kpi-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 14px;
-    font-size: 12px;
-    border-bottom: 1px solid var(--border);
+  .share-btn-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+  .share-btn-row .btn { flex:1; min-width:calc(33% - 6px); font-size:.78rem; padding:11px 6px; }
+
+  /* Info chips (screen 2 header) */
+  .info-chips {
+    display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px;
   }
-
-  .result-kpi-row:last-child { border-bottom: none; }
-
-  .result-kpi-name { color: var(--text-sub); flex: 1; }
-
-  .result-kpi-stars {
-    font-size: 11px;
-    color: var(--gold);
-    font-family: 'DM Mono', monospace;
-    margin: 0 8px;
-  }
-
-  .result-kpi-score {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    font-weight: 600;
+  .chip {
+    background: var(--primary-light);
+    border:1px solid var(--primary-mid);
+    border-radius:20px;
+    padding:4px 12px;
+    font-size:.72rem;
+    font-weight:600;
     color: var(--accent);
-    min-width: 40px;
-    text-align: right;
   }
 
-  .action-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 16px;
-  }
-
-  .btn-share {
-    background: #0088cc;
-    color: #fff;
-  }
-
-  .btn-share:hover { background: #006eaa; transform: translateY(-1px); }
-
-  .btn-copy {
-    background: var(--surface2);
-    color: var(--text);
-    border: 1.5px solid var(--border);
-  }
-
-  .btn-copy:hover { border-color: var(--text-sub); }
-
-  .btn-home {
-    grid-column: 1 / -1;
-    background: var(--surface2);
-    color: var(--text-sub);
-    border: 1.5px solid var(--border);
-  }
-
-  .btn-home:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* TOAST */
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--green);
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 100px;
-    font-size: 13px;
-    font-weight: 600;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    transition: transform 0.3s ease;
-    z-index: 999;
-    white-space: nowrap;
-  }
-
-  .toast.show { transform: translateX(-50%) translateY(0); }
-
-  /* PROGRESS BAR */
-  .progress-bar {
-    height: 3px;
-    background: var(--border);
-    border-radius: 100px;
-    margin-bottom: 24px;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--gold));
-    border-radius: 100px;
-    transition: width 0.4s ease;
-  }
-
-  .scrollable { max-height: 70vh; overflow-y: auto; padding-right: 2px; }
-  .scrollable::-webkit-scrollbar { width: 4px; }
-  .scrollable::-webkit-scrollbar-track { background: transparent; }
-  .scrollable::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-  @media (max-width: 400px) {
-    .app-title { font-size: 18px; }
-    .card { padding: 16px; }
-    .star { font-size: 19px; }
-    .rating-label { font-size: 12px; }
+  .notice {
+    text-align:center; color:var(--text-muted); font-size:.75rem;
+    padding:10px; background:#f5f5f4; border-radius:8px; margin-bottom:10px;
   }
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="app-header">
-    <div class="app-badge"><div class="dot-pulse"></div> Evaluasi Pelayanan</div>
-    <div class="app-title">Penilaian <span>7 Langkah</span><br>Pelayanan</div>
+
+<!-- HEADER -->
+<div class="app-header">
+  <h1>Penilaian 7 Langkah Pelayanan</h1>
+  <div class="subtitle">Evaluasi Standar Kasir</div>
+  <div class="step-indicator">
+    <div class="step-dot active" id="dot1"></div>
+    <div class="step-dot" id="dot2"></div>
+    <div class="step-dot" id="dot3"></div>
   </div>
+</div>
 
-  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:33%"></div></div>
-
-  <!-- SCREEN 1 -->
-  <div class="screen active" id="screen1">
-    <div class="card">
-      <div class="card-title">Informasi Sesi</div>
+<!-- ============ SCREEN 1 ============ -->
+<div class="screen active" id="screen1">
+  <div class="container">
+    <div class="card" style="margin-top:16px;">
+      <div class="card-title">Informasi Awal</div>
 
       <div class="form-group">
-        <label>Nama Toko</label>
-        <select id="namaToko">
-          <option value="">-- Pilih Toko --</option>
-          <option>Cipasir</option><option>Cileunyi</option><option>Pandanwangi</option>
-          <option>Jatos</option><option>Simpang Lima</option><option>Cimanuk</option>
-          <option>Cikajang</option><option>Indihiang</option><option>Siliwangi Tasik</option>
-          <option>Singaparna</option><option>Bulak Laut</option><option>Margaasih</option>
-          <option>Katapang</option><option>Gading Tutuka</option><option>Al Fathu</option>
-          <option>Ciwidey</option><option>Sukamenak</option><option>Rancamanyar</option>
-          <option>Baleendah</option><option>Bojongsoang</option><option>Perumnas Cirebon</option>
-          <option>Perjuangan</option><option>Sumber</option><option>Weru</option>
-          <option>Sudirman Indramayu</option><option>Majalengka</option><option>Angkrek</option>
-          <option>Tegal</option><option>Cibaraja</option><option>Palabuhan Ratu</option>
-          <option>Caringin</option><option>Cidahu</option><option>Cimanggu</option>
-          <option>Cibinong</option><option>Cagar Alam</option><option>Antapani</option>
-          <option>Babakan Sari</option><option>Derwati</option><option>Batununggal</option>
-          <option>Sukagalih</option><option>Tubagus Ismail</option><option>Ujung Berung</option>
-          <option>Margahayu</option><option>Banteng</option><option>Ahmad Yani</option>
-          <option>Munjul</option><option>Galuhmas</option><option>Mega Regency</option>
-          <option>Cihampelas</option><option>Permata Cimahi</option><option>Sarimanah</option>
-          <option>Gegerkalong</option><option>Bhayangkara</option><option>Lopang</option>
-          <option>Cipocok</option><option>Ciwaru</option><option>Kaligandu</option>
-          <option>Pakupatan</option><option>Ciruas</option><option>Pipitan</option>
-          <option>Kragilan</option><option>Cikande</option><option>Kasemen</option>
-          <option>Ciracas</option><option>Legok</option><option>Kelapa Dua</option>
-          <option>Baros</option><option>Petir</option><option>Warung Gunung</option>
-          <option>Multatuli</option><option>Juanda</option><option>Ona Siliwangi</option>
-          <option>Gardu Tanjak</option><option>Majasari</option><option>Taktakan</option>
-          <option>PCI</option><option>Taman Cilegon Indah</option><option>Cibeber</option>
-          <option>Kalitimbang</option><option>Serdang</option><option>Waringin</option>
-          <option>Lebak Indah</option><option>Seneja</option><option>Anyer</option>
-          <option>BBS</option><option>Kramatwatu</option><option>Warnasari</option>
-          <option>Krenceng</option><option>Kebon Dalem</option><option>Jombang</option>
-          <option>Bojonegara</option><option>Merak</option><option>Grogol</option>
-          <option>Temu Putih</option><option>Tegal Cabe</option><option>Menes</option>
-          <option>Labuan</option><option>Panimbang</option><option>Bukit Barisan</option>
-          <option>Rumbai</option><option>Panam Simpang Satria</option>
-        </select>
+        <label class="form-label">Nama Toko</label>
+        <div class="select-wrap">
+          <select class="form-control" id="namaToko">
+            <option value="">-- Pilih Nama Toko --</option>
+            <option>Cipasir</option><option>Cileunyi</option><option>Pandanwangi</option>
+            <option>Jatos</option><option>Simpang Lima</option><option>Cimanuk</option>
+            <option>Cikajang</option><option>Indihiang</option><option>Siliwangi Tasik</option>
+            <option>Singaparna</option><option>Bulak Laut</option><option>Margaasih</option>
+            <option>Katapang</option><option>Gading Tutuka</option><option>Al Fathu</option>
+            <option>Ciwidey</option><option>Sukamenak</option><option>Rancamanyar</option>
+            <option>Baleendah</option><option>Bojongsoang</option><option>Perumnas Cirebon</option>
+            <option>Perjuangan</option><option>Sumber</option><option>Weru</option>
+            <option>Sudirman Indramayu</option><option>Majalengka</option><option>Angkrek</option>
+            <option>Tegal</option><option>Cibaraja</option><option>Palabuhan Ratu</option>
+            <option>Caringin</option><option>Cidahu</option><option>Cimanggu</option>
+            <option>Cibinong</option><option>Cagar Alam</option><option>Antapani</option>
+            <option>Babakan Sari</option><option>Derwati</option><option>Batununggal</option>
+            <option>Sukagalih</option><option>Tubagus Ismail</option><option>Ujung Berung</option>
+            <option>Margahayu</option><option>Banteng</option><option>Ahmad Yani</option>
+            <option>Munjul</option><option>Galuhmas</option><option>Mega Regency</option>
+            <option>Cihampelas</option><option>Permata Cimahi</option><option>Sarimanah</option>
+            <option>Gegerkalong</option><option>Bhayangkara</option><option>Lopang</option>
+            <option>Cipocok</option><option>Ciwaru</option><option>Kaligandu</option>
+            <option>Pakupatan</option><option>Ciruas</option><option>Pipitan</option>
+            <option>Kragilan</option><option>Cikande</option><option>Kasemen</option>
+            <option>Ciracas</option><option>Legok</option><option>Kelapa Dua</option>
+            <option>Baros</option><option>Petir</option><option>Warung Gunung</option>
+            <option>Multatuli</option><option>Juanda</option><option>Ona Siliwangi</option>
+            <option>Gardu Tanjak</option><option>Majasari</option><option>Taktakan</option>
+            <option>PCI</option><option>Taman Cilegon Indah</option><option>Cibeber</option>
+            <option>Kalitimbang</option><option>Serdang</option><option>Waringin</option>
+            <option>Lebak Indah</option><option>Seneja</option><option>Anyer</option>
+            <option>BBS</option><option>Kramatwatu</option><option>Warnasari</option>
+            <option>Krenceng</option><option>Kebon Dalem</option><option>Jombang</option>
+            <option>Bojonegara</option><option>Merak</option><option>Grogol</option>
+            <option>Temu Putih</option><option>Tegal Cabe</option><option>Menes</option>
+            <option>Labuan</option><option>Panimbang</option><option>Bukit Barisan</option>
+            <option>Rumbai</option><option>Panam Simpang Satria</option>
+          </select>
+        </div>
       </div>
 
       <div class="form-group">
-        <label>Nama Kasir</label>
-        <input type="text" id="namaKasir" placeholder="Masukkan nama kasir...">
+        <label class="form-label">Nama Kasir</label>
+        <input type="text" class="form-control" id="namaKasir" placeholder="Masukkan nama kasir"/>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Shift</label>
+          <div class="select-wrap">
+            <select class="form-control" id="shift">
+              <option value="">-- Pilih --</option>
+              <option value="Shift 1">Shift 1</option>
+              <option value="Shift 2">Shift 2</option>
+              <option value="Shift 3">Shift 3</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Jam</label>
+          <input type="time" class="form-control" id="jam"/>
+        </div>
       </div>
 
       <div class="form-group">
-        <label>Shift</label>
-        <select id="shift">
-          <option value="">-- Pilih Shift --</option>
-          <option>SHIFT 1</option>
-          <option>SHIFT 2</option>
-          <option>SHIFT 3</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Jam</label>
-        <input type="time" id="jam">
+        <label class="form-label">Tanggal</label>
+        <input type="date" class="form-control" id="tanggal"/>
       </div>
 
       <div class="btn-row">
-        <button class="btn btn-ghost" onclick="resetScreen1()">Reset</button>
+        <button class="btn btn-reset" onclick="resetScreen1()">Reset</button>
         <button class="btn btn-primary" onclick="goToScreen2()">Lanjut</button>
       </div>
     </div>
   </div>
-
-  <!-- SCREEN 2 -->
-  <div class="screen" id="screen2">
-    <div class="scrollable">
-
-      <!-- GREETING -->
-      <div class="card">
-        <div class="card-title">
-          <div class="step-num">1</div> Greeting
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">3S (Senyum, salam, sapa)</div>
-          <div class="rating-bobot">5%</div>
-          <div class="stars" id="stars_0"></div>
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Gestur tangan terbuka</div>
-          <div class="rating-bobot">4%</div>
-          <div class="stars" id="stars_1"></div>
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Menanyakan "makan disini?"</div>
-          <div class="rating-bobot">5%</div>
-          <div class="stars" id="stars_2"></div>
-        </div>
-      </div>
-
-      <!-- TAKING ORDER -->
-      <div class="card">
-        <div class="card-title">
-          <div class="step-num">2</div> Taking Order
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Menanyakan nama customer</div>
-          <div class="rating-bobot">4%</div>
-          <div class="stars" id="stars_3"></div>
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Menyebut nama sendiri</div>
-          <div class="rating-bobot">4%</div>
-          <div class="stars" id="stars_4"></div>
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Memberi respon ketika customer memesan</div>
-          <div class="rating-bobot">7%</div>
-          <div class="stars" id="stars_5"></div>
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Eye contact</div>
-          <div class="rating-bobot">5%</div>
-          <div class="stars" id="stars_6"></div>
-        </div>
-      </div>
-
-      <!-- SUGGESTIVE SELLING -->
-      <div class="card">
-        <div class="card-title">
-          <div class="step-num">3</div> Suggestive Selling
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Tidak mengabsen menu</div>
-          <div class="rating-bobot">5%</div>
-          <div class="stars" id="stars_7"></div>
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Merekomendasikan menu yang relevan</div>
-          <div class="rating-bobot">8%</div>
-          <div class="stars" id="stars_8"></div>
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Menggunakan bahasa suggestive "mau coba?/sekalian"</div>
-          <div class="rating-bobot">5%</div>
-          <div class="stars" id="stars_9"></div>
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Rekomendasi menu promo</div>
-          <div class="rating-bobot">8%</div>
-          <div class="stars" id="stars_10"></div>
-        </div>
-      </div>
-
-      <!-- REPEAT ORDER -->
-      <div class="card">
-        <div class="card-title">
-          <div class="step-num">4</div> Repeat Order
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Menyebutkan menu sesuai urutan</div>
-          <div class="rating-bobot">3%</div>
-          <div class="stars" id="stars_11"></div>
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Menyebutkan harga</div>
-          <div class="rating-bobot">4%</div>
-          <div class="stars" id="stars_12"></div>
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Menanyakan metode pembayaran</div>
-          <div class="rating-bobot">4%</div>
-          <div class="stars" id="stars_13"></div>
-        </div>
-      </div>
-
-      <!-- PACKING -->
-      <div class="card">
-        <div class="card-title">
-          <div class="step-num">5</div> Packing
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Menyiapkan fast product apabila ada</div>
-          <div class="rating-bobot">5%</div>
-          <div class="stars" id="stars_14"></div>
-        </div>
-      </div>
-
-      <!-- GIVING -->
-      <div class="card">
-        <div class="card-title">
-          <div class="step-num">6</div> Giving
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Meletakan & menyebutkan fast product yang telah disiapkan sebelumnya</div>
-          <div class="rating-bobot">5%</div>
-          <div class="stars" id="stars_15"></div>
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Menyelesaikan transaksi</div>
-          <div class="rating-bobot">5%</div>
-          <div class="stars" id="stars_16"></div>
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Memberikan Strook dengan 2 tangan</div>
-          <div class="rating-bobot">5%</div>
-          <div class="stars" id="stars_17"></div>
-        </div>
-      </div>
-
-      <!-- CLOSING -->
-      <div class="card">
-        <div class="card-title">
-          <div class="step-num">7</div> Closing
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Memberi estimasi waktu & WCS apabila ada pesanan menunggu</div>
-          <div class="rating-bobot">4%</div>
-          <div class="stars" id="stars_18"></div>
-        </div>
-        <div class="rating-item">
-          <div class="rating-label">Ditutup dengan salam dan do'a</div>
-          <div class="rating-bobot">5%</div>
-          <div class="stars" id="stars_19"></div>
-        </div>
-      </div>
-
-      <div class="btn-row" style="margin-bottom:20px">
-        <button class="btn btn-ghost" onclick="resetStars()">Reset Bintang</button>
-        <button class="btn btn-primary" onclick="goToScreen3()">Lihat Hasil</button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- SCREEN 3 -->
-  <div class="screen" id="screen3">
-    <div class="scrollable">
-
-      <div class="card">
-        <div class="result-header">
-          <div class="score-circle">
-            <svg width="120" height="120" viewBox="0 0 120 120">
-              <circle class="bg-circle" cx="60" cy="60" r="52"/>
-              <circle class="fg-circle" id="scoreArc" cx="60" cy="60" r="52"
-                stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
-            </svg>
-            <div class="score-text">
-              <div class="score-val" id="scoreBig">0%</div>
-              <div class="score-unit">Total Nilai</div>
-            </div>
-          </div>
-          <div id="gradeBadge" class="grade-badge"></div>
-          <div style="font-size:12px;color:var(--text-sub)" id="gradeDesc"></div>
-        </div>
-
-        <div class="result-info-grid">
-          <div class="info-chip">
-            <div class="info-chip-label">Toko</div>
-            <div class="info-chip-val" id="resToko">-</div>
-          </div>
-          <div class="info-chip">
-            <div class="info-chip-label">Kasir</div>
-            <div class="info-chip-val" id="resKasir">-</div>
-          </div>
-          <div class="info-chip">
-            <div class="info-chip-label">Shift</div>
-            <div class="info-chip-val" id="resShift">-</div>
-          </div>
-          <div class="info-chip">
-            <div class="info-chip-label">Jam</div>
-            <div class="info-chip-val" id="resJam">-</div>
-          </div>
-        </div>
-      </div>
-
-      <div id="resultCategories"></div>
-
-      <div class="action-buttons">
-        <button class="btn btn-share" onclick="shareToTelegram()">Kirim Telegram</button>
-        <button class="btn btn-copy btn-ghost" onclick="copyResult()">Salin Hasil</button>
-        <button class="btn btn-home btn-ghost" onclick="goToScreen1()">Ke Menu Utama</button>
-      </div>
-
-    </div>
-  </div>
-
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- ============ SCREEN 2 ============ -->
+<div class="screen" id="screen2">
+  <div class="container">
+    <div class="info-chips" id="infoChips" style="margin-top:16px;"></div>
+
+    <!-- GREETING -->
+    <div class="card">
+      <div class="card-title">Greeting</div>
+      <div id="criteria-greeting"></div>
+    </div>
+
+    <!-- TAKING ORDER -->
+    <div class="card">
+      <div class="card-title">Taking Order</div>
+      <div id="criteria-taking"></div>
+    </div>
+
+    <!-- SUGGESTIVE SELLING -->
+    <div class="card">
+      <div class="card-title">Suggestive Selling</div>
+      <div id="criteria-suggestive"></div>
+    </div>
+
+    <!-- REPEAT ORDER -->
+    <div class="card">
+      <div class="card-title">Repeat Order</div>
+      <div id="criteria-repeat"></div>
+    </div>
+
+    <!-- PACKING -->
+    <div class="card">
+      <div class="card-title">Packing</div>
+      <div id="criteria-packing"></div>
+    </div>
+
+    <!-- GIVING -->
+    <div class="card">
+      <div class="card-title">Giving</div>
+      <div id="criteria-giving"></div>
+    </div>
+
+    <!-- CLOSING -->
+    <div class="card">
+      <div class="card-title">Closing</div>
+      <div id="criteria-closing"></div>
+    </div>
+
+    <div class="btn-row" style="margin-bottom:30px;">
+      <button class="btn btn-secondary" onclick="goToScreen1()">Kembali</button>
+      <button class="btn btn-reset" onclick="resetAllStars()">Reset Bintang</button>
+      <button class="btn btn-primary" onclick="goToScreen3()">Hasil</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCREEN 3 ============ -->
+<div class="screen" id="screen3">
+  <div class="container">
+    <div class="score-hero" id="scoreHero" style="margin-top:16px;"></div>
+    <div id="resultCategories"></div>
+
+    <div class="share-btn-row" style="margin-bottom:30px;">
+      <button class="btn btn-secondary" onclick="goToScreen1FromResult()">Menu Utama</button>
+      <button class="btn btn-success" onclick="copyResult()">Salin</button>
+      <button class="btn btn-tg" onclick="shareToTelegram()">Telegram</button>
+    </div>
+  </div>
+</div>
 
 <script>
-  // KPI DATA
-  const kpis = [
-    { id: 0,  label: "3S (Senyum, salam, sapa)",                                          bobot: 5,  cat: "GREETING" },
-    { id: 1,  label: "Gestur tangan terbuka",                                              bobot: 4,  cat: "GREETING" },
-    { id: 2,  label: 'Menanyakan "makan disini?"',                                         bobot: 5,  cat: "GREETING" },
-    { id: 3,  label: "Menanyakan nama customer",                                           bobot: 4,  cat: "TAKING ORDER" },
-    { id: 4,  label: "Menyebut nama sendiri",                                              bobot: 4,  cat: "TAKING ORDER" },
-    { id: 5,  label: "Memberi respon ketika customer memesan",                             bobot: 7,  cat: "TAKING ORDER" },
-    { id: 6,  label: "Eye contact",                                                        bobot: 5,  cat: "TAKING ORDER" },
-    { id: 7,  label: "Tidak mengabsen menu",                                               bobot: 5,  cat: "SUGGESTIVE SELLING" },
-    { id: 8,  label: "Merekomendasikan menu yang relevan",                                 bobot: 8,  cat: "SUGGESTIVE SELLING" },
-    { id: 9,  label: 'Menggunakan bahasa suggestive "mau coba?/sekalian"',                 bobot: 5,  cat: "SUGGESTIVE SELLING" },
-    { id: 10, label: "Rekomendasi menu promo",                                             bobot: 8,  cat: "SUGGESTIVE SELLING" },
-    { id: 11, label: "Menyebutkan menu sesuai urutan",                                     bobot: 3,  cat: "REPEAT ORDER" },
-    { id: 12, label: "Menyebutkan harga",                                                  bobot: 4,  cat: "REPEAT ORDER" },
-    { id: 13, label: "Menanyakan metode pembayaran",                                       bobot: 4,  cat: "REPEAT ORDER" },
-    { id: 14, label: "Menyiapkan fast product apabila ada",                                bobot: 5,  cat: "PACKING" },
-    { id: 15, label: "Meletakan & menyebutkan fast product yang telah disiapkan sebelumnya", bobot: 5, cat: "GIVING" },
-    { id: 16, label: "Menyelesaikan transaksi",                                            bobot: 5,  cat: "GIVING" },
-    { id: 17, label: "Memberikan Strook dengan 2 tangan",                                  bobot: 5,  cat: "GIVING" },
-    { id: 18, label: "Memberi estimasi waktu & WCS apabila ada pesanan menunggu",          bobot: 4,  cat: "CLOSING" },
-    { id: 19, label: "Ditutup dengan salam dan do'a",                                      bobot: 5,  cat: "CLOSING" },
-  ];
+// ============ DATA ============
+const CRITERIA = [
+  // GREETING
+  { id:'c1',  cat:'greeting',     name:'3S (Senyum, salam, sapa)',                                   bobot:5 },
+  { id:'c2',  cat:'greeting',     name:'Gestur tangan terbuka',                                      bobot:4 },
+  { id:'c3',  cat:'greeting',     name:'Menanyakan "makan disini?"',                                 bobot:5 },
+  // TAKING ORDER
+  { id:'c4',  cat:'taking',       name:'Menanyakan nama customer',                                   bobot:4 },
+  { id:'c5',  cat:'taking',       name:'Menyebut nama sendiri',                                      bobot:4 },
+  { id:'c6',  cat:'taking',       name:'Memberi respon ketika customer memesan',                     bobot:7 },
+  { id:'c7',  cat:'taking',       name:'Eye contact',                                                bobot:5 },
+  // SUGGESTIVE SELLING
+  { id:'c8',  cat:'suggestive',   name:'Tidak mengabsen menu',                                       bobot:5 },
+  { id:'c9',  cat:'suggestive',   name:'Merekomendasikan menu yang relevan',                         bobot:8 },
+  { id:'c10', cat:'suggestive',   name:'Menggunakan bahasa suggestive "mau coba?/sekalian"',         bobot:5 },
+  { id:'c11', cat:'suggestive',   name:'Rekomendasi menu promo',                                     bobot:8 },
+  // REPEAT ORDER
+  { id:'c12', cat:'repeat',       name:'Menyebutkan menu sesuai urutan',                             bobot:3 },
+  { id:'c13', cat:'repeat',       name:'Menyebutkan harga',                                          bobot:4 },
+  { id:'c14', cat:'repeat',       name:'Menanyakan metode pembayaran',                               bobot:4 },
+  // PACKING
+  { id:'c15', cat:'packing',      name:'Menyiapkan fast product apabila ada',                        bobot:5 },
+  // GIVING
+  { id:'c16', cat:'giving',       name:'Meletakan & menyebutkan fast product yang telah disiapkan sebelumnya', bobot:5 },
+  { id:'c17', cat:'giving',       name:'Menyelesaikan transaksi',                                    bobot:5 },
+  { id:'c18', cat:'giving',       name:'Memberikan Strook dengan 2 tangan',                          bobot:5 },
+  // CLOSING
+  { id:'c19', cat:'closing',      name:'Memberi estimasi waktu & WCS apabila ada pesanan menunggu',  bobot:4 },
+  { id:'c20', cat:'closing',      name:'Ditutup dengan salam dan do\'a',                              bobot:5 },
+];
 
-  let ratings = new Array(20).fill(0);
+const CATEGORIES = {
+  greeting:   { label:'GREETING',          color:'#f97316' },
+  taking:     { label:'TAKING ORDER',      color:'#8b5cf6' },
+  suggestive: { label:'SUGGESTIVE SELLING',color:'#0891b2' },
+  repeat:     { label:'REPEAT ORDER',      color:'#16a34a' },
+  packing:    { label:'PACKING',           color:'#dc2626' },
+  giving:     { label:'GIVING',            color:'#d97706' },
+  closing:    { label:'CLOSING',           color:'#be185d' },
+};
 
-  // BUILD STARS
-  function buildStars() {
-    kpis.forEach(k => {
-      const container = document.getElementById('stars_' + k.id);
-      container.innerHTML = '';
-      for (let i = 1; i <= 5; i++) {
-        const s = document.createElement('span');
-        s.className = 'star' + (i <= ratings[k.id] ? ' active' : '');
-        s.textContent = '\u2605';
-        s.dataset.idx = k.id;
-        s.dataset.val = i;
-        s.addEventListener('click', function() {
-          const idx = parseInt(this.dataset.idx);
-          const val = parseInt(this.dataset.val);
-          ratings[idx] = val;
-          buildStars();
-        });
-        container.appendChild(s);
-      }
-    });
-  }
+const STAR_LABELS = ['','Buruk','Kurang','Cukup','Baik','Sempurna'];
+const STAR_CLASS  = ['s0','s1','s2','s3','s4','s5'];
 
-  buildStars();
+let scores = {};
+CRITERIA.forEach(c => scores[c.id] = 0);
 
-  function resetStars() {
-    ratings = new Array(20).fill(0);
-    buildStars();
-    showToast('Semua bintang direset');
-  }
+// ============ HELPERS ============
+function formatTanggal(dateStr) {
+  if (!dateStr) return '-';
+  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  const d = new Date(dateStr + 'T00:00:00');
+  return days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+function formatJam(t) {
+  if (!t) return '-';
+  return t;
+}
+function getGrade(pct) {
+  if (pct >= 90) return { label:'Sempurna', cls:'grade-sempurna' };
+  if (pct >= 75) return { label:'Baik',     cls:'grade-baik' };
+  if (pct >= 60) return { label:'Cukup',    cls:'grade-cukup' };
+  if (pct >= 40) return { label:'Kurang',   cls:'grade-kurang' };
+  return                { label:'Buruk',    cls:'grade-buruk' };
+}
 
-  // SCREEN NAV
-  function showScreen(n) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('screen' + n).classList.add('active');
-    const pcts = { 1: '33%', 2: '66%', 3: '100%' };
-    document.getElementById('progressFill').style.width = pcts[n];
-    window.scrollTo(0, 0);
-  }
-
-  function resetScreen1() {
-    document.getElementById('namaToko').value = '';
-    document.getElementById('namaKasir').value = '';
-    document.getElementById('shift').value = '';
-    document.getElementById('jam').value = '';
-    showToast('Form direset');
-  }
-
-  function goToScreen2() {
-    const toko = document.getElementById('namaToko').value;
-    const kasir = document.getElementById('namaKasir').value.trim();
-    const shift = document.getElementById('shift').value;
-    const jam = document.getElementById('jam').value;
-    if (!toko || !kasir || !shift || !jam) {
-      showToast('Lengkapi semua data terlebih dahulu!');
-      return;
-    }
-    showScreen(2);
-  }
-
-  function goToScreen3() {
-    buildResults();
-    showScreen(3);
-  }
-
-  function goToScreen1() {
-    showScreen(1);
-  }
-
-  // CALCULATE
-  function calcScore(idx) {
-    const k = kpis[idx];
-    return (ratings[idx] / 5) * k.bobot;
-  }
-
-  function buildResults() {
-    const toko = document.getElementById('namaToko').value;
-    const kasir = document.getElementById('namaKasir').value.trim();
-    const shift = document.getElementById('shift').value;
-    const jam = document.getElementById('jam').value;
-
-    document.getElementById('resToko').textContent = toko;
-    document.getElementById('resKasir').textContent = kasir;
-    document.getElementById('resShift').textContent = shift;
-    document.getElementById('resJam').textContent = jam;
-
-    let total = 0;
-    kpis.forEach((k, i) => { total += calcScore(i); });
-
-    // Animate circle
-    const circumference = 326.7;
-    const offset = circumference - (total / 100) * circumference;
-    setTimeout(() => {
-      document.getElementById('scoreArc').style.strokeDashoffset = offset;
-    }, 100);
-
-    document.getElementById('scoreBig').textContent = total.toFixed(1) + '%';
-
-    // Grade
-    let grade, color, desc;
-    if (total >= 90) { grade = 'EXCELLENT'; color = '#22c55e'; desc = 'Pelayanan sangat memuaskan'; }
-    else if (total >= 75) { grade = 'GOOD'; color = '#84cc16'; desc = 'Pelayanan baik'; }
-    else if (total >= 60) { grade = 'FAIR'; color = '#f97316'; desc = 'Pelayanan cukup, perlu peningkatan'; }
-    else { grade = 'POOR'; color = '#ef4444'; desc = 'Pelayanan perlu banyak perbaikan'; }
-
-    const badge = document.getElementById('gradeBadge');
-    badge.textContent = grade;
-    badge.style.background = color + '22';
-    badge.style.border = '1px solid ' + color + '66';
-    badge.style.color = color;
-    document.getElementById('gradeDesc').textContent = desc;
-
-    // Categories
-    const cats = ['GREETING', 'TAKING ORDER', 'SUGGESTIVE SELLING', 'REPEAT ORDER', 'PACKING', 'GIVING', 'CLOSING'];
-    const resultDiv = document.getElementById('resultCategories');
-    resultDiv.innerHTML = '';
-
-    cats.forEach(cat => {
-      const catKpis = kpis.filter(k => k.cat === cat);
-      const catTotal = catKpis.reduce((sum, k) => sum + calcScore(k.id), 0);
-      const maxTotal = catKpis.reduce((sum, k) => sum + k.bobot, 0);
-
-      const div = document.createElement('div');
-      div.className = 'result-category';
-      div.style.marginBottom = '8px';
-
-      let rows = '';
-      catKpis.forEach(k => {
-        const sc = calcScore(k.id);
-        const stars = k.id < ratings.length ? '\u2605'.repeat(ratings[k.id]) + '\u2606'.repeat(5 - ratings[k.id]) : '\u2606\u2606\u2606\u2606\u2606';
-        rows += `<div class="result-kpi-row">
-          <div class="result-kpi-name">${k.label}</div>
-          <div class="result-kpi-stars">${stars}</div>
-          <div class="result-kpi-score">${sc.toFixed(2)}%</div>
-        </div>`;
-      });
-
-      div.innerHTML = `
-        <div class="result-cat-header">
-          ${cat}
-          <div class="result-cat-total">${catTotal.toFixed(2)} / ${maxTotal}%</div>
+// ============ BUILD STAR ROWS ============
+function buildCriteriaHTML(catKey) {
+  const items = CRITERIA.filter(c => c.cat === catKey);
+  let html = '';
+  items.forEach(c => {
+    html += `<div class="criterion-row">
+      <div class="criterion-name">${c.name}</div>
+      <div class="criterion-bottom">
+        <div class="stars" id="stars-${c.id}">
+          ${[1,2,3,4,5].map(i => `<span class="star" onclick="setStar('${c.id}',${i})">&#9733;</span>`).join('')}
         </div>
-        <div class="result-kpi-list">${rows}</div>
-      `;
-      resultDiv.appendChild(div);
+        <span class="star-label s0" id="label-${c.id}">Belum dinilai</span>
+      </div>
+    </div>`;
+  });
+  return html;
+}
+
+function renderAllCriteria() {
+  Object.keys(CATEGORIES).forEach(cat => {
+    const el = document.getElementById('criteria-' + cat);
+    if (el) el.innerHTML = buildCriteriaHTML(cat);
+  });
+  // re-apply existing scores
+  CRITERIA.forEach(c => {
+    if (scores[c.id] > 0) updateStarUI(c.id, scores[c.id]);
+  });
+}
+
+function setStar(id, val) {
+  scores[id] = val;
+  updateStarUI(id, val);
+}
+
+function updateStarUI(id, val) {
+  const stars = document.querySelectorAll(`#stars-${id} .star`);
+  stars.forEach((s, i) => {
+    s.classList.toggle('active', i < val);
+  });
+  const lbl = document.getElementById('label-' + id);
+  if (lbl) {
+    lbl.textContent = val > 0 ? STAR_LABELS[val] : 'Belum dinilai';
+    lbl.className = 'star-label ' + (val > 0 ? STAR_CLASS[val] : 's0');
+  }
+}
+
+function resetAllStars() {
+  CRITERIA.forEach(c => { scores[c.id] = 0; updateStarUI(c.id, 0); });
+}
+
+// ============ NAVIGATION ============
+function showScreen(n) {
+  ['screen1','screen2','screen3'].forEach((s,i) => {
+    document.getElementById(s).classList.toggle('active', i+1 === n);
+    document.getElementById('dot'+(i+1)).classList.toggle('active', i+1 === n);
+  });
+  window.scrollTo(0,0);
+}
+
+function resetScreen1() {
+  document.getElementById('namaToko').value = '';
+  document.getElementById('namaKasir').value = '';
+  document.getElementById('shift').value = '';
+  document.getElementById('jam').value = '';
+  document.getElementById('tanggal').value = '';
+}
+
+function goToScreen2() {
+  const toko  = document.getElementById('namaToko').value;
+  const kasir = document.getElementById('namaKasir').value.trim();
+  const shift = document.getElementById('shift').value;
+  const jam   = document.getElementById('jam').value;
+  const tgl   = document.getElementById('tanggal').value;
+
+  if (!toko || !kasir || !shift || !jam || !tgl) {
+    alert('Harap lengkapi semua data terlebih dahulu!');
+    return;
+  }
+
+  // Build info chips
+  const chips = document.getElementById('infoChips');
+  chips.innerHTML = `
+    <div class="chip">${toko}</div>
+    <div class="chip">${kasir.toUpperCase()}</div>
+    <div class="chip">${shift}</div>
+    <div class="chip">${formatJam(jam)}</div>
+    <div class="chip">${formatTanggal(tgl)}</div>
+  `;
+
+  renderAllCriteria();
+  showScreen(2);
+}
+
+function goToScreen1() { showScreen(1); }
+function goToScreen1FromResult() { showScreen(1); }
+
+function goToScreen3() {
+  // Hitung skor
+  let totalPoin = 0;
+  let totalPct = 0;
+  CRITERIA.forEach(c => {
+    const v = scores[c.id];
+    totalPoin += v;
+    totalPct += (v / 5) * c.bobot;
+  });
+  const pct = Math.round(totalPct);
+  const grade = getGrade(pct);
+
+  // Score hero
+  document.getElementById('scoreHero').innerHTML = `
+    <div class="score-big">${totalPoin}</div>
+    <div style="font-size:.75rem;color:var(--text-muted);margin-top:2px;font-weight:600;">dari ${CRITERIA.length * 5} poin</div>
+    <div class="score-pct">${pct}%</div>
+    <div class="score-grade ${grade.cls}">${grade.label}</div>
+  `;
+
+  // Per category
+  const catEl = document.getElementById('resultCategories');
+  catEl.innerHTML = '';
+  Object.keys(CATEGORIES).forEach(catKey => {
+    const items = CRITERIA.filter(c => c.cat === catKey);
+    const catMax = items.length * 5;
+    const catTotal = items.reduce((s,c) => s + scores[c.id], 0);
+    const catInfo = CATEGORIES[catKey];
+
+    let itemRows = items.map(c => {
+      const v = scores[c.id];
+      const cpct = Math.round((v/5)*c.bobot);
+      return `<div class="result-item">
+        <span class="result-item-name">${c.name}</span>
+        <span class="result-item-score">${v}/5</span>
+        <span class="result-item-pct">${cpct}%</span>
+      </div>`;
+    }).join('');
+
+    catEl.innerHTML += `<div class="result-category">
+      <div class="result-cat-header">
+        <div class="result-cat-name" style="color:${catInfo.color}">${catInfo.label}</div>
+        <div class="result-cat-score">${catTotal}/${catMax}</div>
+      </div>
+      ${itemRows}
+    </div>`;
+  });
+
+  showScreen(3);
+}
+
+// ============ BUILD RESULT TEXT ============
+function buildResultText() {
+  const toko  = document.getElementById('namaToko').value;
+  const kasir = document.getElementById('namaKasir').value.trim().toUpperCase();
+  const shift = document.getElementById('shift').value;
+  const jam   = document.getElementById('jam').value;
+  const tgl   = document.getElementById('tanggal').value;
+
+  let totalPoin = 0;
+  let totalPct  = 0;
+  CRITERIA.forEach(c => {
+    const v = scores[c.id];
+    totalPoin += v;
+    totalPct += (v / 5) * c.bobot;
+  });
+  const pct   = Math.round(totalPct);
+  const grade = getGrade(pct);
+
+  let txt = '';
+  txt += 'PENILAIAN 7 LANGKAH PELAYANAN\n';
+  txt += '\n';
+  txt += 'Nama Toko    : ' + toko + '\n';
+  txt += 'Nama Kasir   : ' + kasir + '\n';
+  txt += 'Hari/Tanggal : ' + formatTanggal(tgl) + '\n';
+  txt += 'Shift        : ' + shift + '\n';
+  txt += 'Jam          : ' + formatJam(jam) + '\n';
+  txt += '\n';
+
+  Object.keys(CATEGORIES).forEach(catKey => {
+    const items  = CRITERIA.filter(c => c.cat === catKey);
+    const catMax = items.length * 5;
+    const catTotal = items.reduce((s,c) => s + scores[c.id], 0);
+    const catInfo  = CATEGORIES[catKey];
+
+    txt += catInfo.label + ' [' + catTotal + '/' + catMax + ']\n';
+    items.forEach(c => {
+      txt += '  - ' + c.name + ' [' + scores[c.id] + '/5]\n';
     });
-  }
+    txt += '\n';
+  });
 
-  // SHARE TEXT
-  function buildShareText() {
-    const toko = document.getElementById('namaToko').value;
-    const kasir = document.getElementById('namaKasir').value.trim();
-    const shift = document.getElementById('shift').value;
-    const jam = document.getElementById('jam').value;
+  txt += 'POIN      : ' + totalPoin + '\n';
+  txt += 'PENILAIAN : ' + pct + '%\n';
+  txt += 'NILAI     : ' + grade.label + '\n';
 
-    let total = 0;
-    kpis.forEach((k, i) => { total += calcScore(i); });
+  return txt;
+}
 
-    let text = "=== PENILAIAN 7 LANGKAH PELAYANAN ===\n\n";
-    text += "Toko   : " + toko + "\n";
-    text += "Kasir  : " + kasir + "\n";
-    text += "Shift  : " + shift + "\n";
-    text += "Jam    : " + jam + "\n\n";
+function copyResult() {
+  const txt = buildResultText();
+  navigator.clipboard.writeText(txt).then(() => {
+    alert('Hasil berhasil disalin ke clipboard!');
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = txt;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert('Hasil berhasil disalin!');
+  });
+}
 
-    const cats = ['GREETING', 'TAKING ORDER', 'SUGGESTIVE SELLING', 'REPEAT ORDER', 'PACKING', 'GIVING', 'CLOSING'];
-    cats.forEach(cat => {
-      const catKpis = kpis.filter(k => k.cat === cat);
-      const catTotal = catKpis.reduce((sum, k) => sum + calcScore(k.id), 0);
-      text += "[ " + cat + " ] => " + catTotal.toFixed(2) + "%\n";
-      catKpis.forEach(k => {
-        const sc = calcScore(k.id);
-        text += "  - " + k.label + " (" + ratings[k.id] + "/5 * " + k.bobot + "%) = " + sc.toFixed(2) + "%\n";
-      });
-      text += "\n";
-    });
+async function shareToTelegram() {
 
-    text += "================================\n";
-    text += "NILAI TOTAL: " + total.toFixed(2) + "%\n";
+    const text = buildResultText();
 
-    let grade;
-    if (total >= 90) grade = 'EXCELLENT';
-    else if (total >= 75) grade = 'GOOD';
-    else if (total >= 60) grade = 'FAIR';
-    else grade = 'POOR';
-    text += "GRADE: " + grade + "\n";
-    text += "================================";
-
-    return text;
-  }
-
-  function shareToTelegram() {
-    const text = encodeURIComponent(buildShareText());
-    window.open('https://t.me/share/url?text=' + text, '_blank');
-  }
-
-  function copyResult() {
-    const text = buildShareText();
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(text).then(() => showToast('Hasil berhasil disalin!'));
-    } else {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      showToast('Hasil berhasil disalin!');
+    // Android / iPhone
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: "Penilaian 7 Langkah Pelayanan",
+                text: text
+            });
+            return;
+        } catch(e){}
     }
-  }
 
-  // TOAST
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
-  }
+    // Telegram App
+    window.location.href =
+        "tg://msg?text=" + encodeURIComponent(text);
+
+    // Fallback
+    setTimeout(() => {
+        window.location.href =
+        "https://t.me/share/url?text=" + encodeURIComponent(text);
+    }, 1000);
+}
+
+// Init default date
+document.getElementById('tanggal').valueAsDate = new Date();
 </script>
 </body>
 </html>
-```
